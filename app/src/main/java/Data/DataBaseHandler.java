@@ -114,4 +114,45 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         //возвращаем заполненный лист
         return carsList;
     }
+
+    //метод обновления таблицы
+    public int updateCar(Car car) {
+        //записываем информацию когда обновляем запись
+        SQLiteDatabase db = this.getWritableDatabase();
+        //передаём информацию полученную из таблицы
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Util.KEY_NAME, car.getName());
+        contentValues.put(Util.KEY_PRICE, car.getPrice());
+        //метод для обновления таблицы
+        return db.update(Util.TABLE_NAME, contentValues, Util.KEY_ID + "=?",
+                new String[]{String.valueOf(car.getId())});
+    }
+
+
+    //метод удаления элементов из таблицы
+    public void deleteCar(Car car) {
+        //получаем обькт\
+        SQLiteDatabase db = this.getWritableDatabase();
+        //вызываем метод удаления
+        db.delete(Util.TABLE_NAME, Util.KEY_ID + "=?",
+                new String[]{String.valueOf(car.getId())});
+        //акрываем соединение
+        db.close();
+    }
+
+
+    //етод который возвращает колличество всех записей в таблицу
+    public int getCarsCount(){
+        //даём возможность читать
+        SQLiteDatabase db = this.getReadableDatabase();
+        //считываем элементы таблицы, запрашиваем колличество
+        String countQuery = "SELECT * FROM " + Util.TABLE_NAME;
+        //получаем колличество
+        Cursor cursor = db.rawQuery(countQuery,null);
+        //возвращаем колличество
+        return cursor.getCount();
+
+
+
+    }
 }
