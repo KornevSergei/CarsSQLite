@@ -69,18 +69,20 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
     //метод для извлечения записи по айди
     public Car getCar(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         //извлекаем записи из всех столбцов, извлекаем только по айди, и пишем нулл для других параметров сортировки
         Cursor cursor = db.query(Util.TABLE_NAME, new String[]{Util.KEY_ID, Util.KEY_NAME, Util.KEY_PRICE},
                 Util.KEY_ID + "=?", new String[]{String.valueOf(id)},
                 null, null, null, null);
+
+        Car car = new Car();
 
         //проверяем что поиск не пустой, если ок - то запускаем
         if (cursor != null) {
             cursor.moveToFirst();
         }
         //возвращаем обьект с извлеченными данными из курсора, передаем индексы столбцов
-        Car car = new Car(Integer.parseInt(cursor.getString(0)),
+        car = new Car(Integer.parseInt(cursor.getString(0)),
                 cursor.getString(1),
                 cursor.getString(2));
 
